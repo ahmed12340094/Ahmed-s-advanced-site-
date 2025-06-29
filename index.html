@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ahmed - موقع هاكر أسطوري</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  /* Reset */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+
+  body, html {
+    height: 100%;
+    background: #0a0a0a;
+    font-family: 'Share Tech Mono', monospace;
+    color: #8affd4;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+  }
+
+  /* الخلفية */
+  #matrix-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: black;
+    z-index: 0;
+  }
+
+  /* نص تعريفي */
+  .container {
+    position: relative;
+    z-index: 10;
+    max-width: 450px;
+    margin: 50px auto;
+    background: rgba(30, 0, 50, 0.85);
+    border: 1px solid #9f00ff;
+    padding: 20px 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #9f00ffaa;
+    text-align: center;
+  }
+
+  .container h1 {
+    font-size: 2.4rem;
+    color: #c45eff;
+    margin-bottom: 10px;
+    text-shadow: 0 0 6px #c45eff;
+  }
+
+  .container p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #8affd4;
+    margin-bottom: 20px;
+  }
+
+  /* روابط التواصل */
+  .links {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+  }
+
+  .links a {
+    text-decoration: none;
+    color: #c45eff;
+    font-size: 1.6rem;
+    border: 1.5px solid #c45eff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #c45eff88;
+    transition: all 0.3s ease;
+  }
+
+  .links a:hover {
+    background: #c45eff;
+    color: black;
+    box-shadow: 0 0 18px #c45eff;
+  }
+
+  /* تأثير الأرقام عند الضغط */
+  #canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* لا يتفاعل مع الفأرة */
+    z-index: 5;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- خلفية الأرقام -->
+<canvas id="matrix-bg"></canvas>
+
+<div class="container">
+  <h1>أحمد</h1>
+  <p>مبرمج هاكر شغوف من العراق، أهوى البرمجة واستكشاف عالم التكنولوجيا والاختراق الأخلاقي.</p>
+  <div class="links">
+    <a href="https://t.me/hoopis_6" target="_blank" rel="noopener noreferrer">Telegram</a>
+    <a href="https://instagram.com/_92vt" target="_blank" rel="noopener noreferrer">Instagram</a>
+  </div>
+</div>
+
+<!-- تأثير أرقام عند الضغط -->
+<canvas id="canvas"></canvas>
+
+<script>
+  // خلفية ماتريكس متحركة
+  const matrixCanvas = document.getElementById('matrix-bg');
+  const matrixCtx = matrixCanvas.getContext('2d');
+
+  matrixCanvas.width = window.innerWidth;
+  matrixCanvas.height = window.innerHeight;
+
+  const matrixChars = '01'; // أرقام ثنائية تعطي إحساس هاكر
+  const fontSize = 14;
+  const columns = matrixCanvas.width / fontSize;
+  const drops = [];
+
+  for(let x = 0; x < columns; x++) {
+    drops[x] = Math.random() * matrixCanvas.height;
+  }
+
+  function drawMatrix() {
+    matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+    matrixCtx.fillStyle = '#22ff00';
+    matrixCtx.font = fontSize + 'px monospace';
+
+    for(let i = 0; i < drops.length; i++) {
+      const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+      matrixCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if(drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+
+  setInterval(drawMatrix, 40);
+
+  // تأثير أرقام عند الضغط على الشاشة
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const numbers = '0123456789';
+  const particles = [];
+
+  class Particle {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.value = numbers.charAt(Math.floor(Math.random() * numbers.length));
+      this.alpha = 1;
+      this.size = 20;
+      this.speedY = Math.random() * 2 + 1;
+    }
+
+    update() {
+      this.y -= this.speedY;
+      this.alpha -= 0.02;
+    }
+
+    draw() {
+      ctx.globalAlpha = this.alpha;
+      ctx.fillStyle = '#00ff00';
+      ctx.font = this.size + 'px monospace';
+      ctx.fillText(this.value, this.x, this.y);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for(let i = 0; i < particles.length; i++) {
+      particles[i].update();
+      particles[i].draw();
+      if(particles[i].alpha <= 0) {
+        particles.splice(i, 1);
+        i--;
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  window.addEventListener('click', function(e) {
+    for(let i = 0; i < 20; i++) {
+      particles.push(new Particle(e.clientX + Math.random()*30 - 15, e.clientY + Math.random()*30 - 15));
+    }
+  });
+
+  // إعادة تحجيم الكانفاس مع تغير حجم الشاشة
+  window.addEventListener('resize', () => {
+    matrixCanvas.width = window.innerWidth;
+    matrixCanvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+
+</body>
+</html>
